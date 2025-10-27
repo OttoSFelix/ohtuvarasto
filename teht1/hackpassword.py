@@ -1,7 +1,7 @@
 import sys
 import requests
 import bs4 as bs
-
+# Lisäys tehtävää 1 varten
 def extract_token(response):
 	soup = bs.BeautifulSoup(response.text, 'html.parser')
 	for i in soup.form.findChildren('input'):
