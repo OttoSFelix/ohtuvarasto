@@ -18,5 +18,7 @@ def main():
     olutta.ota_varastosta(1000.0)
 
     mehua.ota_varastosta(-32.9)
+
+# testiline lollll
 if __name__ == "__main__":
     main()
