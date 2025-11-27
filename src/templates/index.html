@@ -150,15 +150,22 @@
             showResult(id, `Space left: ${data.tilaa}`);
         }
 
+        // Validate and parse amount from input
+        function getValidAmount(inputId, warehouseId) {
+            const input = document.getElementById(inputId);
+            const amount = parseFloat(input.value);
+            if (isNaN(amount)) {
+                showResult(warehouseId, 'Please enter a valid amount');
+                return null;
+            }
+            return { amount, input };
+        }
+
         // Add to warehouse
         async function addToWarehouse(id) {
-            const input = document.getElementById(`add-amount-${id}`);
-            const maara = parseFloat(input.value);
-
-            if (isNaN(maara)) {
-                showResult(id, 'Please enter a valid amount');
-                return;
-            }
+            const result = getValidAmount(`add-amount-${id}`, id);
+            if (!result) return;
+            const { amount: maara, input } = result;
 
             const response = await fetch(`/api/warehouses/${id}/lisaa`, {
                 method: 'POST',
@@ -174,13 +181,9 @@
 
         // Take from warehouse
         async function takeFromWarehouse(id) {
-            const input = document.getElementById(`take-amount-${id}`);
-            const maara = parseFloat(input.value);
-
-            if (isNaN(maara)) {
-                showResult(id, 'Please enter a valid amount');
-                return;
-            }
+            const result = getValidAmount(`take-amount-${id}`, id);
+            if (!result) return;
+            const { amount: maara, input } = result;
 
             const response = await fetch(`/api/warehouses/${id}/ota`, {
                 method: 'POST',

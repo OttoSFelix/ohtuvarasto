@@ -8,6 +8,14 @@ warehouses = {}
 warehouse_counter = 0
 
 
+def parse_float(value, default=0.0):
+    """Safely parse a float value with error handling."""
+    try:
+        return float(value) if value is not None else default
+    except (ValueError, TypeError):
+        return default
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -30,8 +38,8 @@ def create_warehouse():
     global warehouse_counter
     data = request.get_json()
 
-    tilavuus = float(data.get('tilavuus', 0))
-    alku_saldo = float(data.get('alku_saldo', 0))
+    tilavuus = parse_float(data.get('tilavuus'), 0)
+    alku_saldo = parse_float(data.get('alku_saldo'), 0)
 
     warehouse = Varasto(tilavuus, alku_saldo)
     warehouse_counter += 1
@@ -61,7 +69,7 @@ def lisaa_varastoon(wid):
         return jsonify({'error': 'Warehouse not found'}), 404
 
     data = request.get_json()
-    maara = float(data.get('maara', 0))
+    maara = parse_float(data.get('maara'), 0)
 
     warehouse = warehouses[wid]
     warehouse.lisaa_varastoon(maara)
@@ -78,7 +86,7 @@ def ota_varastosta(wid):
         return jsonify({'error': 'Warehouse not found'}), 404
 
     data = request.get_json()
-    maara = float(data.get('maara', 0))
+    maara = parse_float(data.get('maara'), 0)
 
     warehouse = warehouses[wid]
     otettu = warehouse.ota_varastosta(maara)
